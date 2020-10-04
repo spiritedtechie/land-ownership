@@ -1,6 +1,7 @@
 package tech.land.ownership;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -8,8 +9,9 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 
 public class CompanyGraph {
+
     private final Map<String, Set<String>> graph;
-    private Map<String, String> graphReverse;
+    private final Map<String, String> graphReverse;
 
     public CompanyGraph(Map<String, String> graphReverse) {
         this.graphReverse = graphReverse;
@@ -21,5 +23,9 @@ public class CompanyGraph {
 
     public Map<String, Set<String>> getGraph() {
         return this.graph;
+    }
+
+    public Optional<String> getParentFor(String node) {
+        return Optional.ofNullable(graphReverse.get(node));
     }
 }

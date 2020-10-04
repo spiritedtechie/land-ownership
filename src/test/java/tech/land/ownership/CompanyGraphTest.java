@@ -3,17 +3,16 @@ package tech.land.ownership;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static org.assertj.core.api.Assertions.assertThat;
+import static tech.land.ownership.TestUtilities.setOf;
 
 public class CompanyGraphTest {
 
-    @Test
-    public void testBuildsGraph() {
+    private CompanyGraph buildTestGraph() {
         Map<String, String> reverseGraph = new HashMap<>();
         reverseGraph.put("A", null);
         reverseGraph.put("B", "A");
@@ -24,7 +23,12 @@ public class CompanyGraphTest {
         reverseGraph.put("G", "E");
         reverseGraph.put("H", "D");
 
-        CompanyGraph companyGraph = new CompanyGraph(reverseGraph);
+        return new CompanyGraph(reverseGraph);
+    }
+
+    @Test
+    public void testBuildsGraph() {
+        CompanyGraph companyGraph = buildTestGraph();
 
         Map<String, Set<String>> forwardGraph = companyGraph.getGraph();
 
@@ -35,8 +39,30 @@ public class CompanyGraphTest {
         assertThat(forwardGraph).containsEntry("D", setOf("H"));
     }
 
-    public static HashSet<String> setOf(String... companyIds) {
-        return newHashSet(companyIds);
+    @Test
+    public void testGetParent_forANode() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<String> parent = companyGraph.getParentFor("B");
+
+        assertThat(parent.get()).isSameAs("A");
     }
 
+    @Test
+    public void testGetParent_forAnotherNode() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<String> parent = companyGraph.getParentFor("H");
+
+        assertThat(parent.get()).isSameAs("D");
+    }
+
+    @Test
+    public void testGetParent_forNodeThatDoesntExist() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<String> parent = companyGraph.getParentFor("U");
+
+        assertThat(parent).isEmpty();
+    }
 }
