@@ -31,6 +31,10 @@ public class CompanyGraph {
         return this.graph;
     }
 
+    public boolean contains(String node) {
+        return this.graphReverse.containsKey(node);
+    }
+
     public Optional<String> getParentFor(String node) {
         return Optional.ofNullable(graphReverse.get(node));
     }

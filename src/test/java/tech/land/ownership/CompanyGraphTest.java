@@ -101,4 +101,22 @@ public class CompanyGraphTest {
 
         assertThat(children.get()).containsExactly("E");
     }
+
+    @Test
+    public void testContains_forNodeThatIsInGraph() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        boolean result = companyGraph.contains("E");
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    public void testContains_forNodeThatIsNotInGraph() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        boolean result = companyGraph.contains("U");
+
+        assertThat(result).isFalse();
+    }
 }
