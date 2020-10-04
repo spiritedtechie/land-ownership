@@ -41,7 +41,7 @@ public class CompanyGraph {
 
     public String getRootFor(String node) {
         if (!graphReverse.containsKey(node)) {
-            throw new IllegalArgumentException("Node not in graph");
+            return null;
         }
 
         String parent = graphReverse.get(node);

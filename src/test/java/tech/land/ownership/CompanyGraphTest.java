@@ -129,11 +129,12 @@ public class CompanyGraphTest {
         assertThat(root).isSameAs("A");
     }
 
-    @Test(expected = IllegalArgumentException.class)
     public void testGetRoot_forANodeThatDoesNotExists() {
         CompanyGraph companyGraph = buildTestGraph();
 
-        companyGraph.getRootFor("U");
+        String result = companyGraph.getRootFor("U");
+
+        assertThat(result).isNullOrEmpty();
     }
 
     @Test
