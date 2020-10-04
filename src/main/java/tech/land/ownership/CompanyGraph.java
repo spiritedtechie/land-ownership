@@ -10,12 +10,18 @@ import static java.util.stream.Collectors.mapping;
 
 public class CompanyGraph {
 
+    // Key: node id, Value: set of child node ids
     private final Map<String, Set<String>> graph;
+    // Key: node id, Value: parent node id
     private final Map<String, String> graphReverse;
 
     public CompanyGraph(Map<String, String> graphReverse) {
         this.graphReverse = graphReverse;
-        this.graph = this.graphReverse.entrySet()
+        this.graph = buildGraph();
+    }
+
+    private Map<String, Set<String>> buildGraph() {
+        return this.graphReverse.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue() != null)
                 .collect(groupingBy(Map.Entry::getValue, mapping(Map.Entry::getKey, Collectors.toSet())));
