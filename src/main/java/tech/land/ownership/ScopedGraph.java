@@ -7,13 +7,15 @@ import static java.util.Collections.emptySet;
 public class ScopedGraph {
     private final CompanyGraph sourceGraph;
 
-    private final String nodeToScopeTo;
+    private final String startNode;
+    private final String endNode;
 
     private final Map<String, Set<String>> scoped;
 
     public ScopedGraph(CompanyGraph sourceGraph, String nodeToScopeTo) {
         this.sourceGraph = sourceGraph;
-        this.nodeToScopeTo = nodeToScopeTo;
+        this.startNode = sourceGraph.getRootFor(nodeToScopeTo);
+        this.endNode = nodeToScopeTo;
         this.scoped = scope();
     }
 
@@ -21,18 +23,22 @@ public class ScopedGraph {
         return this.scoped;
     }
 
+    public String getStartNode() {
+        return startNode;
+    }
+
     private Map<String, Set<String>> scope() {
-        boolean nodeExists = sourceGraph.contains(nodeToScopeTo);
+        boolean nodeExists = sourceGraph.contains(endNode);
         if (!nodeExists) {
             return Collections.emptyMap();
         }
 
-        boolean scopedNodeIsARoot = sourceGraph.getParentFor(nodeToScopeTo).isEmpty();
-        if (scopedNodeIsARoot) {
-            return Map.of(nodeToScopeTo, emptySet());
+        boolean endNodeIsARoot = sourceGraph.getParentFor(endNode).isEmpty();
+        if (endNodeIsARoot) {
+            return Map.of(endNode, emptySet());
         }
 
-        return scopeRecursively(nodeToScopeTo, new HashMap<>());
+        return scopeRecursively(endNode, new HashMap<>());
     }
 
     private Map<String, Set<String>> scopeRecursively(String node, Map<String, Set<String>> accumulator) {

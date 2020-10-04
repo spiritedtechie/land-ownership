@@ -119,4 +119,29 @@ public class CompanyGraphTest {
 
         assertThat(result).isFalse();
     }
+
+    @Test
+    public void testGetRoot_success() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        String root = companyGraph.getRootFor("G");
+
+        assertThat(root).isSameAs("A");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetRoot_forANodeThatDoesNotExists() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        companyGraph.getRootFor("U");
+    }
+
+    @Test
+    public void testGetRoot_forANodeThatIsAlreadyARoot() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        String root = companyGraph.getRootFor("A");
+
+        assertThat(root).isSameAs("A");
+    }
 }

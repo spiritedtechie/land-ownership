@@ -39,6 +39,17 @@ public class CompanyGraph {
         return Optional.ofNullable(graphReverse.get(node));
     }
 
+    public String getRootFor(String node) {
+        if (!graphReverse.containsKey(node)) {
+            throw new IllegalArgumentException("Node not in graph");
+        }
+
+        String parent = graphReverse.get(node);
+        boolean nodeIsRoot = parent == null;
+
+        return (nodeIsRoot) ? node : getRootFor(parent);
+    }
+
     public Optional<Set<String>> getChildrenOf(String node) {
         if (!this.graphReverse.containsKey(node)) {
             return Optional.empty();
