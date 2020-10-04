@@ -28,4 +28,12 @@ public class CompanyGraph {
     public Optional<String> getParentFor(String node) {
         return Optional.ofNullable(graphReverse.get(node));
     }
+
+    public Optional<Set<String>> getChildrenOf(String node) {
+        if (!this.graphReverse.containsKey(node)) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(this.graph.get(node));
+    }
 }

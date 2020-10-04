@@ -65,4 +65,40 @@ public class CompanyGraphTest {
 
         assertThat(parent).isEmpty();
     }
+
+    @Test
+    public void testGetChildren_whereNodeNotFound() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<Set<String>> children = companyGraph.getChildrenOf("U");
+
+        assertThat(children).isEmpty();
+    }
+
+    @Test
+    public void testGetChildren_whereNodeHasNoChildren() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<Set<String>> children = companyGraph.getChildrenOf("F");
+
+        assertThat(children).isEmpty();
+    }
+
+    @Test
+    public void testGetChildren_forNodeThatExists() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<Set<String>> children = companyGraph.getChildrenOf("E");
+
+        assertThat(children.get()).containsExactly("F", "G");
+    }
+
+    @Test
+    public void testGetChildren_forAnotherNodeThatExists() {
+        CompanyGraph companyGraph = buildTestGraph();
+
+        Optional<Set<String>> children = companyGraph.getChildrenOf("C");
+
+        assertThat(children.get()).containsExactly("E");
+    }
 }
