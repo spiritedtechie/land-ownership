@@ -7,17 +7,17 @@ public class ConsoleGraphDisplay implements GraphDisplay {
 
     @Override
     public void show(ScopedGraph scopedGraph) {
-        this.printGraph(scopedGraph, scopedGraph.getStartNode(), 1);
+        this.handleNodeRecursively(scopedGraph, scopedGraph.getStartNode(), 1);
     }
 
-    private void printGraph(ScopedGraph graph, String node, int level) {
+    private void handleNodeRecursively(ScopedGraph graph, String node, int level) {
         printNode(level, node);
 
         boolean nodeHasNoChildren = graph.get().get(node) == null;
         if (nodeHasNoChildren) return;
 
         for (String childNode : graph.get().get(node)) {
-            printGraph(graph, childNode, level + 1);
+            handleNodeRecursively(graph, childNode, level + 1);
         }
     }
 
@@ -31,7 +31,7 @@ public class ConsoleGraphDisplay implements GraphDisplay {
 
     /**
      * This has been extracted to allow unit testing of core display functionality
-     * via unit tests
+     * above, spying on the actual print to console.
      */
     void printLineToConsole(String line) {
         System.out.println(line);

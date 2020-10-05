@@ -27,10 +27,6 @@ public class CompanyGraph {
                 .collect(groupingBy(Map.Entry::getValue, mapping(Map.Entry::getKey, Collectors.toSet())));
     }
 
-    public Map<String, Set<String>> getGraph() {
-        return this.graph;
-    }
-
     public boolean contains(String node) {
         return this.graphReverse.containsKey(node);
     }
@@ -56,5 +52,9 @@ public class CompanyGraph {
         }
 
         return Optional.ofNullable(this.graph.get(node));
+    }
+
+    Map<String, Set<String>> getGraph() {
+        return this.graph;
     }
 }

@@ -1,6 +1,9 @@
 package tech.land.ownership;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.emptySet;
 
@@ -52,13 +55,16 @@ public class ScopedGraph {
     }
 
     private Map<String, Set<String>> scopeRecursively(String node, Map<String, Set<String>> accumulator) {
-        Optional<String> parent = sourceGraph.getParentFor(node);
-        if (!parent.isPresent()) {
+        Optional<String> parentOpt = sourceGraph.getParentFor(node);
+
+        boolean nodeIsRoot = !parentOpt.isPresent();
+        if (nodeIsRoot) {
             return accumulator;
         }
 
-        Set<String> children = sourceGraph.getChildrenOf(parent.get()).orElse(emptySet());
-        accumulator.put(parent.get(), children);
-        return scopeRecursively(parent.get(), accumulator);
+        String parent = parentOpt.get();
+        Set<String> children = sourceGraph.getChildrenOf(parent).orElse(emptySet());
+        accumulator.put(parent, children);
+        return scopeRecursively(parent, accumulator);
     }
 }

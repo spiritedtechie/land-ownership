@@ -25,8 +25,8 @@ public class Application {
         String companyId = args[0];
 
         CompanyGraph companyGraph = new CompanyGraph(companyParents);
-        ScopedGraph scopedGraph = new ScopedGraph(companyGraph, companyId);
 
+        ScopedGraph scopedGraph = new ScopedGraph(companyGraph, companyId);
         GraphDisplay display = new ConsoleGraphDisplay();
         display.show(scopedGraph);
     }

@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static tech.land.ownership.TestUtilities.setOf;
 
 public class ScopedGraphTest {
@@ -68,7 +67,7 @@ public class ScopedGraphTest {
     }
 
     @Test
-    public void testScopeGraph_nodeIsPartOfMultipleLeveledTree() {
+    public void testScopeGraph_nodeIsPartOfMultipleLevelledTree() {
         Map<String, String> graphReverse = new HashMap<>();
         graphReverse.put("C", "A");
         graphReverse.put("E", "C");
@@ -83,7 +82,7 @@ public class ScopedGraphTest {
     }
 
     @Test
-    public void testScopeGraph_includesSiblingsNodesOfNodePathToScopedNode() {
+    public void testScopeGraph_includesSiblingsNodesOnPathToScopedNode() {
         Map<String, String> reverseGraph = new HashMap<>();
         reverseGraph.put("B", "A");
         reverseGraph.put("C", "A");
@@ -95,7 +94,7 @@ public class ScopedGraphTest {
         ScopedGraph scopedGraph = new ScopedGraph(companyGraph, "E");
 
         assertThat(scopedGraph.get()).hasSize(2);
-        assertThat(scopedGraph.get()).containsEntry("A", setOf("B" , "C"));
+        assertThat(scopedGraph.get()).containsEntry("A", setOf("B", "C"));
         assertThat(scopedGraph.get()).containsEntry("C", setOf("D", "E"));
     }
 }
