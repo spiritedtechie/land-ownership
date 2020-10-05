@@ -124,25 +124,26 @@ public class CompanyGraphTest {
     public void testGetRoot_success() {
         CompanyGraph companyGraph = buildTestGraph();
 
-        String root = companyGraph.getRootFor("G");
+        Optional<String> root = companyGraph.getRootFor("G");
 
-        assertThat(root).isSameAs("A");
+        assertThat(root.get()).isSameAs("A");
     }
 
-    public void testGetRoot_forANodeThatDoesNotExists() {
+    @Test
+    public void testGetRoot_forANodeThatDoesNotExist() {
         CompanyGraph companyGraph = buildTestGraph();
 
-        String result = companyGraph.getRootFor("U");
+        Optional<String> result = companyGraph.getRootFor("U");
 
-        assertThat(result).isNullOrEmpty();
+        assertThat(result).isEmpty();
     }
 
     @Test
     public void testGetRoot_forANodeThatIsAlreadyARoot() {
         CompanyGraph companyGraph = buildTestGraph();
 
-        String root = companyGraph.getRootFor("A");
+        Optional<String> root = companyGraph.getRootFor("A");
 
-        assertThat(root).isSameAs("A");
+        assertThat(root.get()).isSameAs("A");
     }
 }

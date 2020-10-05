@@ -1,29 +1,49 @@
 package tech.land.ownership;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
 import static tech.land.ownership.TestUtilities.setOf;
 
 public class ScopedGraphTest {
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
     public void testScopeGraph_nodeToScopeToDoesNotExists() {
-        Map<String, String> graphReverse = new HashMap<>();
-        graphReverse.put("B", "A");
-        graphReverse.put("A", null);
-        CompanyGraph companyGraph = new CompanyGraph(graphReverse);
+        CompanyGraph companyGraph = new CompanyGraph(new HashMap<>());
 
-        ScopedGraph scopedGraph = new ScopedGraph(companyGraph, "U");
-
-        assertThat(scopedGraph.get()).isEmpty();
+        exceptionRule.expect(IllegalArgumentException.class);
+        exceptionRule.expectMessage("Cannot scope graph as end node does not exist in source graph");
+        new ScopedGraph(companyGraph, "U");
     }
 
     @Test
-    public void testScopeGraph_nodeToScopeToIsARoot () {
+    public void testScopeGraph_rootNodeNotFound() {
+        Map<String, String> graphReverse = new HashMap<>();
+        graphReverse.put("B", "A");
+        graphReverse.put("A", null);
+        CompanyGraph companyGraph = spy(new CompanyGraph(graphReverse));
+
+        // Override getRoot of company graph to return empty for this test case
+        doReturn(Optional.empty()).when(companyGraph).getRootFor("B");
+
+        exceptionRule.expect(IllegalStateException.class);
+        exceptionRule.expectMessage("Cannot scope graph as root node not found for scoped node");
+        new ScopedGraph(companyGraph, "B");
+    }
+
+    @Test
+    public void testScopeGraph_nodeToScopeToIsARoot() {
         Map<String, String> graphReverse = new HashMap<>();
         graphReverse.put("B", "A");
         graphReverse.put("A", null);

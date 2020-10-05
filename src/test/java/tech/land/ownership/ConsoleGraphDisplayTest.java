@@ -57,14 +57,4 @@ public class ConsoleGraphDisplayTest {
         InOrder inOrder = Mockito.inOrder(graphDisplay);
         inOrder.verify(graphDisplay).printLineToConsole("|  - A;");
     }
-
-    @Test
-    public void testShow_whereNoStartNode() {
-        ScopedGraph scopedGraph = mock(ScopedGraph.class);
-        doReturn(null).when(scopedGraph).getStartNode();
-
-        graphDisplay.show(scopedGraph);
-
-        verify(graphDisplay, never()).printLineToConsole("|  - A;");
-    }
 }

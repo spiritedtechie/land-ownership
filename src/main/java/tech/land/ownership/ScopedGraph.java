@@ -10,17 +10,32 @@ public class ScopedGraph {
     private final String startNode;
     private final String endNode;
 
-    private final Map<String, Set<String>> scoped;
+    private final Map<String, Set<String>> scopedGraph;
 
     public ScopedGraph(CompanyGraph sourceGraph, String nodeToScopeTo) {
         this.sourceGraph = sourceGraph;
-        this.startNode = sourceGraph.getRootFor(nodeToScopeTo);
-        this.endNode = nodeToScopeTo;
-        this.scoped = scope();
+        this.endNode = initialiseEndNode(nodeToScopeTo);
+        this.startNode = initialiseStartNode(nodeToScopeTo);
+        this.scopedGraph = scope();
+    }
+
+    private String initialiseStartNode(String endNode) {
+        Optional<String> rootForNode = sourceGraph.getRootFor(endNode);
+        if (rootForNode.isEmpty()) {
+            throw new IllegalStateException("Cannot scope graph as root node not found for scoped node");
+        }
+        return rootForNode.get();
+    }
+
+    private String initialiseEndNode(String endNode) {
+        if (!sourceGraph.contains(endNode)) {
+            throw new IllegalArgumentException("Cannot scope graph as end node does not exist in source graph");
+        }
+        return endNode;
     }
 
     public Map<String, Set<String>> get() {
-        return this.scoped;
+        return this.scopedGraph;
     }
 
     public String getStartNode() {
@@ -28,11 +43,6 @@ public class ScopedGraph {
     }
 
     private Map<String, Set<String>> scope() {
-        boolean nodeExists = sourceGraph.contains(endNode);
-        if (!nodeExists) {
-            return Collections.emptyMap();
-        }
-
         boolean endNodeIsARoot = sourceGraph.getParentFor(endNode).isEmpty();
         if (endNodeIsARoot) {
             return Map.of(endNode, emptySet());

@@ -39,15 +39,15 @@ public class CompanyGraph {
         return Optional.ofNullable(graphReverse.get(node));
     }
 
-    public String getRootFor(String node) {
+    public Optional<String> getRootFor(String node) {
         if (!graphReverse.containsKey(node)) {
-            return null;
+            return Optional.empty();
         }
 
         String parent = graphReverse.get(node);
         boolean nodeIsRoot = parent == null;
 
-        return (nodeIsRoot) ? node : getRootFor(parent);
+        return (nodeIsRoot) ? Optional.of(node) : getRootFor(parent);
     }
 
     public Optional<Set<String>> getChildrenOf(String node) {
