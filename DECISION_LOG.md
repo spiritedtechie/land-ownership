@@ -36,10 +36,10 @@ This is backed by two hash maps:
 
 This allows the graph to be efficiently scoped per request by:
 1. Finding the node to scope - O(1)
-2. Transversing the reverse graph whilst - O(log n)
+2. Transversing the reverse graph - O(log n)
 3. Filtering (reducing) the forward graph along the way - O(log n)
 
-It also kept the code simple vs. say implementing a bread-first search.
+It also kept the code simple vs. say implementing a breadth-first search.
 
 Much of the transversal is performed using recursion as it seems natural to 
 recursively work up/down the tree in steps, and also it remove the boilerplate of 
@@ -65,12 +65,12 @@ __Per request__
 2. Space of scoped graph = O(log n)
 
 #### Conclusions
-This trades off application load complexity vs. per-request complexity, supporting decent
-per-request scoping of the graph by using more time and space on application load. It is essentially
-an inverted index like on a database query.
+This trades off application load-time complexity vs. per-request complexity, supporting decent
+per-request complexity for scoping of the graph by using more time and space on application load. It is essentially
+a search index similar to one used for a database query.
 
 It could fail if the company tree structure is deeply nested such that the O(log n) transversal
-increases accordingly. i.e. if there were majority deeply nested company ownership relationships, 
+increases accordingly. i.e. if there were on majority deeply nested company ownership relationships, 
 transversal effectively could become closer to O(n) as the overall tree would be quite flat.
 
 ## Development
@@ -88,7 +88,7 @@ Here are some thoughts for making the application operational, though what is vi
 the context:
 
 * __Service + API__ - allows for load-once of graph, and per-request scoping. In Java, I'd use something like Spring Boot, 
-but I'm sure there is a Javascript alternative e.g. Express
+but I'm sure there is a Javascript alternative e.g. Node/Express
 
 * __Database__ - having a repository for company details which can be queried per request for companies on
 the scoped graph. These could be cached as well if response times need optimising. 
@@ -109,7 +109,7 @@ __Adding land parcel aggregate counts__ - possible to periodically precompute th
 This might mean eventual consistency, depending on if the counts are updated
 in real-time (e.g. as companies are added / changed in the tree) or as a periodic batch process over the graph. Either way,
 using company-only land parcel counts, and computing aggregate counts per request does not seem sensible 
-as there are a lot more of them vs companies.
+as there are a lot more land parcels vs companies and so the performance would be considerably slower.
 
 __Supporting complex relationships__ - e.g. multiple parents companies - The data structure 
 can support this if the reverse graph HashMap was changed to have a set of parents.  
